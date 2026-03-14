@@ -1,0 +1,58 @@
+# ─── Secrets & local env ───────────────────────────────────────
+.env
+*.env.local
+
+# ─── Maven ─────────────────────────────────────────────────────
+target/
+*.jar
+*.war
+*.class
+.mvn/repository/
+!.mvn/wrapper/maven-wrapper.jar
+
+# ─── Terraform ─────────────────────────────────────────────────
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform.lock.hcl
+terraform.tfvars
+*.auto.tfvars
+
+# ─── IDE ───────────────────────────────────────────────────────
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+bin/
+build/
+.metadata/
+.apt_generated/
+.springBeans
+
+# ─── System / Other ────────────────────────────────────────────
+node_modules/
+*.exe
+*.dll
+*.so
+
+# ─── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Logs ──────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Docker volumes  ───────────────────────────────────────────
+postgres_data/
+localstack_data/
+
+# ─── Python (Lambda) ───────────────────────────────────────────
+__pycache__/
+*.pyc
+lambda/image-resizer/vendor/
+lambda/image-resizer/*.zip
