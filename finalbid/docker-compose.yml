@@ -147,36 +147,38 @@ services:
   # ──────────────────────────────────────────────
   # AUCTION-SERVICE
   # ──────────────────────────────────────────────
-  # auction-service:
-  #   build:
-  #     context: ./auction-service
-  #     dockerfile: Dockerfile
-  #   container_name: finalbid-auction-service
-  #   env_file: .env
-  #   environment:
-  #     SPRING_PROFILES_ACTIVE: default
-  #     DB_URL: jdbc:postgresql://postgres:5432/finalbid
-  #     REDIS_HOST: redis
-  #     AWS_ENDPOINT_OVERRIDE: http://localstack:4566
-  #     AWS_ACCESS_KEY_ID: test
-  #     AWS_SECRET_ACCESS_KEY: test
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     kafka:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #     localstack:
-  #       condition: service_healthy
-  #   networks:
-  #     - finalbid-net
-  #   healthcheck:
-  #     test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
-  #     interval: 15s
-  #     timeout: 10s
-  #     retries: 10
-
+  auction-service:
+    build:
+      context: ./auction-service
+      dockerfile: Dockerfile
+    container_name: finalbid-auction-service
+    ports:
+      - "8080:8080"
+    env_file: .env
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      DB_URL: jdbc:postgresql://postgres:5432/finalbid
+      REDIS_HOST: redis
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      AWS_ENDPOINT_OVERRIDE: http://localstack:4566
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+    networks:
+      - finalbid-net
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8080/actuator/health" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
   # # ──────────────────────────────────────────────
   # # NOTIFICATION-SERVICE
   # # ──────────────────────────────────────────────
