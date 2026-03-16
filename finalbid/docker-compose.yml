@@ -182,31 +182,32 @@ services:
   # # ──────────────────────────────────────────────
   # # NOTIFICATION-SERVICE
   # # ──────────────────────────────────────────────
-  # notification-service:
-  #   build:
-  #     context: ./notification-service
-  #     dockerfile: Dockerfile
-  #   container_name: finalbid-notification-service
-  #   env_file: .env
-  #   environment:
-  #     SPRING_PROFILES_ACTIVE: default
-  #     DB_URL: jdbc:postgresql://postgres:5432/finalbid
-  #     MAIL_HOST: mailpit
-  #     MAIL_PORT: 1025
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     kafka:
-  #       condition: service_healthy
-  #     mailpit:
-  #       condition: service_started
-  #   networks:
-  #     - finalbid-net
-  #   healthcheck:
-  #     test: ["CMD", "wget", "-qO-", "http://localhost:8082/actuator/health"]
-  #     interval: 15s
-  #     timeout: 10s
-  #     retries: 10
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: finalbid-notification-service
+    env_file: .env
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      DB_URL: jdbc:postgresql://postgres:5432/finalbid
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    networks:
+      - finalbid-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8082/actuator/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
 
   # # ──────────────────────────────────────────────
   # # NGINX (single entry point, simulates ALB)

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your auction ended</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h2 style="color: #333333;">Hello <span th:text="${sellerUsername}">Seller</span>,</h2>
+        <p style="color: #555555; line-height: 1.6;">Your auction for <strong><span th:text="${auctionTitle}">Auction Title</span></strong> has ended without any bids.</p>
+        
+        <p style="color: #555555; line-height: 1.6;">Don't worry! You can easily relist your item by creating a new auction on FinalBid.</p>
+        
+        <hr style="border: none; border-top: 1px solid #eeeeee; margin: 30px 0;">
+        <p style="color: #999999; font-size: 12px; text-align: center;">&copy; 2026 FinalBid. All rights reserved.</p>
+    </div>
+</body>
+</html>

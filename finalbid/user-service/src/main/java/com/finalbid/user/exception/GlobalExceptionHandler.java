@@ -81,6 +81,7 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
             HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
         problem.setTitle("Internal Server Error");
+        ex.printStackTrace();
         return ResponseEntity.internalServerError().body(problem);
     }
 }

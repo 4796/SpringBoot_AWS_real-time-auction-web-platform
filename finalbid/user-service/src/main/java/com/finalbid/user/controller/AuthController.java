@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * REST controller for all /api/auth/* endpoints.
@@ -43,12 +42,12 @@ public class AuthController {
      * On failure: redirect to /login?error=invalid_token
      */
     @GetMapping("/verify-email")
-    public RedirectView verifyEmail(@RequestParam String token) {
+    public ResponseEntity<MessageResponse> verifyEmail(@RequestParam String token) {
         try {
             authService.verifyEmail(token);
-            return new RedirectView("/login?verified=true");
+            return ResponseEntity.ok(new MessageResponse("Email verified successfully. You can now log in."));
         } catch (Exception e) {
-            return new RedirectView("/login?error=invalid_token");
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid or expired verification token."));
         }
     }
 

@@ -42,6 +42,7 @@ public class KafkaEventPublisher implements EventPublisher {
             Map<String, String> payload = Map.of(
                 "eventType",         "USER_REGISTERED",
                 "userId",            userId,
+                "referenceId",       userId,
                 "recipientEmail",    email,
                 "username",          username,
                 "verificationToken", verificationToken,

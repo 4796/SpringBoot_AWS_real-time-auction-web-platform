@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify Your FinalBid Account</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h2 style="color: #333333;">Welcome to FinalBid, <span th:text="${username}">User</span>!</h2>
+        <p style="color: #555555; line-height: 1.6;">Thank you for registering. Please verify your email address to activate your account and start bidding and creating auctions.</p>
+        <div style="text-align: center; margin: 30px 0;">
+            <a th:href="${verificationLink}" style="background-color: #007bff; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">Verify Email</a>
+        </div>
+        <p style="color: #777777; font-size: 14px;">If the button doesn't work, copy and paste this link into your browser:</p>
+        <p style="color: #777777; font-size: 12px; word-break: break-all;" th:text="${verificationLink}"></p>
+        <hr style="border: none; border-top: 1px solid #eeeeee; margin: 30px 0;">
+        <p style="color: #999999; font-size: 12px; text-align: center;">&copy; 2026 FinalBid. All rights reserved.</p>
+    </div>
+</body>
+</html>

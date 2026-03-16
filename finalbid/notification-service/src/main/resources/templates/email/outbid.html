@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>You've been outbid!</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h2 style="color: #333333;">You've been outbid, <span th:text="${username}">User</span>!</h2>
+        <p style="color: #555555; line-height: 1.6;">Someone placed a higher bid on <strong><span th:text="${auctionTitle}">Auction Title</span></strong>.</p>
+        <p style="color: #555555; line-height: 1.6; font-size: 18px;">The current price is now <strong><span th:text="${currentPrice}">100.00</span> EUR</strong>.</p>
+        <!-- Removed non-functional 'Place a Higher Bid' link -->
+        <hr style="border: none; border-top: 1px solid #eeeeee; margin: 30px 0;">
+        <p style="color: #999999; font-size: 12px; text-align: center;">&copy; 2026 FinalBid. All rights reserved.</p>
+    </div>
+</body>
+</html>

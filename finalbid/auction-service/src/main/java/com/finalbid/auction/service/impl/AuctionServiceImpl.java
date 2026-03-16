@@ -16,14 +16,18 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.finalbid.auction.repository.BidRepository;
+
 @Service
 @Transactional
 public class AuctionServiceImpl implements AuctionService {
 
     private final AuctionRepository auctionRepository;
+    private final BidRepository bidRepository;
 
-    public AuctionServiceImpl(AuctionRepository auctionRepository) {
+    public AuctionServiceImpl(AuctionRepository auctionRepository, BidRepository bidRepository) {
         this.auctionRepository = auctionRepository;
+        this.bidRepository = bidRepository;
     }
 
     @Override
@@ -74,6 +78,10 @@ public class AuctionServiceImpl implements AuctionService {
         
         if (auction.getStatus() == AuctionStatus.ACTIVE) {
             auction.setStatus(AuctionStatus.ENDED);
+            
+            bidRepository.findTopByAuctionIdOrderByAmountDesc(auctionId)
+                .ifPresent(topBid -> auction.setWinnerId(topBid.getBidderId()));
+
             auction.setUpdatedAt(Instant.now());
             auctionRepository.save(auction);
         }

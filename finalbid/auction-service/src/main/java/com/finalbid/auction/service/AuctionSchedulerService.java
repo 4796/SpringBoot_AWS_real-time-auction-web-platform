@@ -50,19 +50,26 @@ public class AuctionSchedulerService {
                 logger.info("Closing auction: {}", auction.getId());
                 auctionService.closeAuction(auction.getId());
 
+                // Re-fetch auction because closeAuction() sets the winnerId in the DB
+                Auction closedAuction = auctionRepository.findById(auction.getId()).orElse(auction);
+
                 // Publish Event
-                eventPublisher.publish(auctionEndedTopic, "AUCTION_ENDED", Map.of(
-                    "auctionId", auction.getId(),
-                    "winnerId", auction.getWinnerId() != null ? auction.getWinnerId() : "NONE",
-                    "finalPrice", auction.getCurrentPrice()
-                ));
+                Map<String, Object> payload = new java.util.HashMap<>();
+                payload.put("auctionId",    closedAuction.getId().toString());
+                payload.put("sellerId",     closedAuction.getSellerId().toString());
+                payload.put("auctionTitle", closedAuction.getTitle());
+                payload.put("finalPrice",   closedAuction.getCurrentPrice());
+                payload.put("hasWinner",    closedAuction.getWinnerId() != null ? "true" : "false");
+                payload.put("winnerId",     closedAuction.getWinnerId() != null ? closedAuction.getWinnerId().toString() : "");
+
+                eventPublisher.publish(auctionEndedTopic, "AUCTION_ENDED", payload);
 
                 // Broadcast WebSocket message
-                redisTemplate.convertAndSend("finalbid:ws:ended:" + auction.getId(), 
+                redisTemplate.convertAndSend("finalbid:ws:ended:" + closedAuction.getId(), 
                     String.format("{\"auctionId\":\"%s\",\"winnerId\":\"%s\",\"finalPrice\":%s}", 
-                    auction.getId(), 
-                    auction.getWinnerId() != null ? auction.getWinnerId() : "NONE", 
-                    auction.getCurrentPrice()));
+                    closedAuction.getId(), 
+                    closedAuction.getWinnerId() != null ? closedAuction.getWinnerId() : "NONE", 
+                    closedAuction.getCurrentPrice()));
 
             } catch (Exception e) {
                 logger.error("Failed to close auction: " + auction.getId(), e);

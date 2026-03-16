@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>You won!</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h2 style="color: #333333;">Congratulations <span th:text="${winnerUsername}">Winner</span>!</h2>
+        <p style="color: #555555; line-height: 1.6;">You won the auction for <strong><span th:text="${auctionTitle}">Auction Title</span></strong>!</p>
+        <p style="color: #555555; line-height: 1.6; font-size: 18px;">Your winning bid was <strong><span th:text="${finalPrice}">100.00</span> EUR</strong>.</p>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; border-left: 4px solid #28a745; margin: 25px 0;">
+            <p style="margin: 0; color: #333;"><strong>Next Steps:</strong> Please contact the seller at <a th:href="'mailto:' + ${sellerEmail}" th:text="${sellerEmail}" style="color: #007bff; text-decoration: none;">seller@example.com</a> to arrange payment and delivery.</p>
+        </div>
+        
+        <hr style="border: none; border-top: 1px solid #eeeeee; margin: 30px 0;">
+        <p style="color: #999999; font-size: 12px; text-align: center;">&copy; 2026 FinalBid. All rights reserved.</p>
+    </div>
+</body>
+</html>

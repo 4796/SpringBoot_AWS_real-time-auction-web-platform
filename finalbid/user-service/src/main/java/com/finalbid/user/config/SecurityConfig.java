@@ -47,6 +47,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                 .requestMatchers(HttpMethod.GET,  "/api/auth/verify-email").permitAll()
+                // Internal cross-service endpoint (no JWT, network-level security)
+                .requestMatchers("/internal/**").permitAll()
                 // Actuator health
                 .requestMatchers("/actuator/**").permitAll()
                 // Everything else requires valid JWT

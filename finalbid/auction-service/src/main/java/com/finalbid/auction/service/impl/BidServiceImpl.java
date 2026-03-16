@@ -51,23 +51,37 @@ public class BidServiceImpl implements BidService {
         // 1. Run validation pipeline
         validationStrategies.forEach(strategy -> strategy.validate(auction, bidderId, request.amount()));
 
-        // 2. Save bid
+        // 2. Find previous top bidder BEFORE saving the new bid
+        String previousBidderId = bidRepository
+            .findTopByAuctionIdOrderByAmountDesc(auctionId)
+            .map(b -> b.getBidderId().toString())
+            .orElse("");
+
+        // Prevent self-outbid notifications
+        if (bidderId.toString().equals(previousBidderId)) {
+            previousBidderId = "";
+        }
+
+        // 3. Save bid
         Bid bid = new Bid(auction, bidderId, request.amount());
         Bid savedBid = bidRepository.save(bid);
 
-        // 3. Update auction
+        // 4. Update auction
         auction.setCurrentPrice(request.amount());
         auction.setBidCount(auction.getBidCount() + 1);
         auction.setUpdatedAt(Instant.now());
         auctionRepository.save(auction);
 
-        // 4. Publish Event (Kafka/SNS)
-        eventPublisher.publish(bidPlacedTopic, "BID_PLACED", Map.of(
-            "auctionId", auctionId,
-            "bidderId", bidderId,
-            "amount", request.amount(),
-            "bidId", savedBid.getId()
-        ));
+        // 5. Publish Event (Kafka/SNS)
+        Map<String, Object> bidPayload = new java.util.HashMap<>();
+        bidPayload.put("auctionId", auctionId.toString());
+        bidPayload.put("bidderId", bidderId.toString());
+        bidPayload.put("bidId", savedBid.getId().toString());
+        bidPayload.put("amount", request.amount());
+        bidPayload.put("auctionTitle", auction.getTitle());
+        bidPayload.put("previousBidderId", previousBidderId);
+
+        eventPublisher.publish(bidPlacedTopic, "BID_PLACED", bidPayload);
 
         // 5. Broadcast to Redis Pub/Sub for WebSockets
         redisTemplate.convertAndSend("finalbid:ws:bid:" + auctionId, 
