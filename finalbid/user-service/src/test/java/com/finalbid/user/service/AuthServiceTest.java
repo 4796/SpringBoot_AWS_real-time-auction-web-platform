@@ -56,4 +56,22 @@ class AuthServiceTest extends BaseIntegrationTest {
         // Act & Assert
         assertThrows(EmailAlreadyExistsException.class, () -> authService.register(request2));
     }
+
+    @Test
+    void shouldThrowWhenPendingVerificationLogin() {
+        // Arrange
+        RegisterRequest registerRequest = new RegisterRequest("pendinguser", "pending@finalbid.com", "Password123");
+        authService.register(registerRequest);
+
+        com.finalbid.user.dto.LoginRequest loginRequest = new com.finalbid.user.dto.LoginRequest("pending@finalbid.com", "Password123");
+        org.springframework.mock.web.MockHttpServletResponse response = new org.springframework.mock.web.MockHttpServletResponse();
+
+        // Act & Assert
+        org.springframework.web.server.ResponseStatusException exception = assertThrows(
+            org.springframework.web.server.ResponseStatusException.class,
+            () -> authService.login(loginRequest, response)
+        );
+        assertThat(exception.getStatusCode().value()).isEqualTo(403);
+        assertThat(exception.getReason()).isEqualTo("Email not verified");
+    }
 }

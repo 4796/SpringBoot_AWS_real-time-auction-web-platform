@@ -129,6 +129,11 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Account has been banned");
         }
 
+        // PENDING_VERIFICATION users get 403
+        if (user.getStatus() == UserStatus.PENDING_VERIFICATION) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email not verified");
+        }
+
         // Issue tokens
         String accessToken  = jwtService.issueAccessToken(user);
         String refreshToken = jwtService.issueRefreshToken(user);
